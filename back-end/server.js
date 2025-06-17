@@ -20,7 +20,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/users", userRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.get("/", (req, res) => {
-  res.send(" Bulk Upload Server is Running!");
+  res.send(" Social media Server is Running!");
 });
 
 // Create HTTP server and Socket.io server
