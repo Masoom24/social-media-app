@@ -1,4 +1,4 @@
-// NotificationBell.jsx
+
 import { useNotificationStore } from "@/store/useUserStore";
 import { FaBell } from "react-icons/fa"; // Using react-icons for better control
 
@@ -14,7 +14,8 @@ const NotificationBell = () => {
       }}
       title="Notifications"
     >
-      <FaBell size={24} color="#50394c" /> {/* Bell icon with custom size and color */}
+      {/* <FaBell size={24} color="#50394c" />  */}
+      {/* Bell icon with custom size and color */}
 
       {notifications.length > 0 && (
         <span

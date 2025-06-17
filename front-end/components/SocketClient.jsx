@@ -1,4 +1,4 @@
-"use client"; // ✅ Important for client-side in App Router
+"use client"; //  Important for client-side in App Router
 
 import { useEffect } from "react";
 import socket from "@/utils/socket";
