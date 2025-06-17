@@ -3,22 +3,28 @@
 import { useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/store/useUserStore";
-
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 
 export default function PostForm({ onPostCreated }) {
   const [text, setText] = useState("");
   const { user } = useUserStore();
-  const [image, setImage]= useState(null)
-  const [showMessage, setShowMessage]= useState(false)
+  const [image, setImage] = useState(null);
+  const [showMessage, setShowMessage] = useState(false);
+  const router = useRouter();
 
-const handleSubmit = async () => {
-  if (!user?._id) {
-    alert("User not logged in");
-    return;
-  }
- 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    logout();
+    router.push("/login");
+  };
+
+  const handleSubmit = async () => {
+    if (!user?._id) {
+      alert("User not logged in");
+      return;
+    }
 
     if (!text.trim()) {
       setShowMessage(true);
@@ -31,29 +37,35 @@ const handleSubmit = async () => {
       return;
     }
 
-  try {
-    const res = await axios.post("http://localhost:5000/api/posts/create", {
-      content:text,         
-      celebrityId: user._id,  
-      image: null,   
-    });
-
-    setText("");
-    setImage(null);
-    if (onPostCreated) onPostCreated(res.data);
-  } catch (error) {
-    console.error("Post creation failed:", error);
-  }
-};
+    try {
+      const res = await axios.post("http://localhost:5000/api/posts/create", {
+        content: text,
+        celebrityId: user._id,
+        image: null,
+      });
+      console.log("Post created response:", res.data);
+      setText("");
+      setImage(null);
+      if (onPostCreated) onPostCreated(res.data);
+    } catch (error) {
+      console.error("Post creation failed:", error);
+    }
+  };
   return (
-     <div className="max-w-xl mx-auto bg-white rounded-xl shadow-md p-6 border">
+    <div className="max-w-xl mx-auto bg-white rounded-xl shadow-md p-6 border">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">
         Create a Post
       </h2>
-      
-    {showMessage && (
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 hover:bg-red-600 cursor-pointer text-white px-4 py-1.5 text-sm rounded-lg transition"
+      >
+        Logout
+      </button>
+
+      {showMessage && (
         <div className="mt-4 bg-yellow-100 border-l-4 border-yellow-300 text-black p-3 rounded transition-all duration-500 ease-in-out">
-           Post content cannot be empty!
+          Post content cannot be empty!
         </div>
       )}
       <Textarea
@@ -62,8 +74,7 @@ const handleSubmit = async () => {
         placeholder="What's on your mind?"
         className="w-full resize-none border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         rows={4}
-            required
-
+        required
       />
 
       <div className="flex justify-end mt-4">
@@ -73,9 +84,7 @@ const handleSubmit = async () => {
         >
           Post
         </Button>
-        
       </div>
-     
     </div>
   );
 }

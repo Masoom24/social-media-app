@@ -47,6 +47,7 @@ exports.getUserPosts = async (req, res) => {
   try {
     const { page = 1, limit = 5 } = req.query;
     const posts = await Post.find({ user: req.params.id })
+      .populate("user", "name")
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
@@ -62,6 +63,7 @@ exports.getFeed = async (req, res) => {
   const { userId, page = 1, limit = 5 } = req.query;
   const user = await User.findById(userId);
   const posts = await Post.find({ user: { $in: user.following } })
+    .populate("user", "name")
     .sort({ createdAt: -1 })
     .skip((page - 1) * limit)
     .limit(parseInt(limit));

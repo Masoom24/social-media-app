@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useUserStore } from "@/store/useUserStore";
-
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
@@ -20,13 +19,10 @@ export default function LoginPage() {
         email,
         password,
       });
+      localStorage.clear(); // Clear old session
       localStorage.setItem("token", res.data.token);
-      // console.log("token", res.data.user);
-      // localStorage.setItem("userId", res.data.user._id);
-      // console.log("user ID saved", res.data.user._id);
-      setUser(res.data.user);
-      
 
+      setUser(res.data.user);
       if (res.data.user.role === "celebrity") router.push("/celebrity");
       else router.push("/public");
     } catch (err) {
@@ -35,44 +31,43 @@ export default function LoginPage() {
   };
 
   return (
-  <div className="max-w-md mx-auto mt-20 p-8 rounded-xl shadow-lg bg-[#F1F1F2] border border-gray-200">
-  <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Login</h2>
+    <div className="max-w-md mx-auto mt-20 p-8 rounded-xl shadow-lg bg-[#F1F1F2] border border-gray-200">
+      <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+        Login
+      </h2>
 
-  <Input
-    placeholder="Email"
-    className="w-full p-3 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#A1D6E2]" 
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-  />
+      <Input
+        placeholder="Email"
+        className="w-full p-3 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-[#A1D6E2]"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        placeholder="Password"
+        type="password"
+        className="w-full p-3 border border-gray-300 rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-[#A1D6E2]"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-  <Input
-    placeholder="Password"
-    type="password"
-    
-    className="w-full p-3 border border-gray-300 rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-[#A1D6E2]"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-  />
-
-  <Button
-    onClick={handleLogin}
-    className="w-full bg-[#A1D6E2] text-white font-medium py-2.5 rounded-md hover:bg-[#91cbd8] transition duration-200"
-  >
-    Login
-  </Button>
-
-  <div className="mt-6 text-center text-sm text-gray-700">
-    <p>
-      Don&apos;t have an account?{" "}
-      <span
-        onClick={() => router.push("/registration")}
-        className="text-[#05caf7] hover:underline cursor-pointer font-medium"
+      <Button
+        onClick={handleLogin}
+        className="w-full bg-[#A1D6E2] text-white font-medium py-2.5 rounded-md hover:bg-[#91cbd8] transition duration-200"
       >
-        Register
-      </span>
-    </p>
-  </div>
-</div>
+        Login
+      </Button>
 
+      <div className="mt-6 text-center text-sm text-gray-700">
+        <p>
+          Don&apos;t have an account?{" "}
+          <span
+            onClick={() => router.push("/registration")}
+            className="text-[#05caf7] hover:underline cursor-pointer font-medium"
+          >
+            Register
+          </span>
+        </p>
+      </div>
+    </div>
   );
 }
